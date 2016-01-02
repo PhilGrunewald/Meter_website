@@ -26,12 +26,37 @@
 		    exit();
 		} else {
 			if ($_GET['people'] !== "xx") {
-				$sql="UPDATE Household SET page_number=$_GET[page_number], people=$_GET[people], age_group1=$_GET[ag1], age_group1=$_GET[ag1], age_group2=$_GET[ag2], age_group3=$_GET[ag3], age_group4=$_GET[ag4], age_group5=$_GET[ag5], age_group6=$_GET[ag6], rooms=$_GET[rms], income=$_GET[inc]  WHERE idHousehold=999";
+				$sql="UPDATE Household SET 
+					page_number=$_GET[pn],
+					people=$_GET[people],
+					age_group1=$_GET[ag1],
+					age_group1=$_GET[ag1],
+					age_group2=$_GET[ag2],
+					age_group3=$_GET[ag3],
+					age_group4=$_GET[ag4],
+					age_group5=$_GET[ag5],
+					age_group6=$_GET[ag6],
+					rooms=$_GET[rms],
+					appliance1=$_GET[ap1],
+					appliance1=$_GET[ap1],
+					appliance2=$_GET[ap2],
+					appliance3=$_GET[ap3],
+					appliance4=$_GET[ap4],
+					appliance5=$_GET[ap5],
+					appliance6=$_GET[ap6],
+					appliance7=$_GET[ap7],
+					appliance8=$_GET[ap8],
+					income=$_GET[inc]  WHERE idHousehold=999";
 				mysqli_query($db, $sql);
 			}
 		}
-		$sql = "SELECT page_number, people, income, age_group1, age_group2, age_group3, age_group4, age_group5, age_group6, rooms  FROM Household WHERE idHousehold = 999";
-		
+		$sql = "SELECT page_number,
+				people,
+				age_group1, age_group2, age_group3, age_group4, age_group5, age_group6,
+				rooms,
+				appliance1, appliance1, appliance2, appliance3, appliance4, appliance5, appliance6, appliance7, appliance8,
+				income,
+				rooms  FROM Household WHERE idHousehold = 999";
 		$result = mysqli_query($db, $sql);
 		
 		if (mysqli_num_rows($result) > 0) {
@@ -46,6 +71,14 @@
 				$age_group5 = $row["age_group5"];
 				$age_group6 = $row["age_group6"];
 				$rooms 		= $row["rooms"];
+				$appliance1 = $row["appliance1"];
+				$appliance2 = $row["appliance2"];
+				$appliance3 = $row["appliance3"];
+				$appliance4 = $row["appliance4"];
+				$appliance5 = $row["appliance5"];
+				$appliance6 = $row["appliance6"];
+				$appliance7 = $row["appliance7"];
+				$appliance8 = $row["appliance8"];
 				$income 	= $row["income"];
 		    }
 		} else {
@@ -55,19 +88,21 @@
 
 <script type="text/javascript">
 	function backPage() {
-		var page = document.getElementById('page_number');
+		var page = document.getElementById('pn');
+		var previousPage = document.getElementById('pp');
 		var pageNumber = parseInt(page.value);
+		previousPage.value = pageNumber;
 		pageNumber -= 1;
 		page.value = pageNumber;
-		$('#qSlider').carousel(pageNumber);
 		}
 
 	function nextPage() {
-		var page = document.getElementById('page_number');
+		var page = document.getElementById('pn');
+		var previousPage = document.getElementById('pp');
 		var pageNumber = parseInt(page.value);
+		previousPage.value = pageNumber;
 		pageNumber += 1;
 		page.value = pageNumber;
-		$('#qSlider').carousel(pageNumber);
 		}
 
 	function radioToggle(thisButton) {
@@ -118,7 +153,7 @@
 
    <div id="qSlider" class="carousel slide">
     <ol class="carousel-indicators">
-     <li data-target="#qSlider" data-slide-to="0" class="active"></li>
+     <li data-target="#qSlider" data-slide-to="0" ></li>
      <li data-target="#qSlider" data-slide-to="1" ></li>
      <li data-target="#qSlider" data-slide-to="2" ></li>
      <li data-target="#qSlider" data-slide-to="3" ></li>
@@ -130,7 +165,9 @@
 <form method="get">
     <div class="carousel-inner">
 		<!-- pass php variables to GET form elements -->
-		<input type="hidden" id="page_number" name="page_number" value="<?php echo $page_number; ?>">
+		<!-- stored previous page when advancing or moving back pages -->
+		<input type="hidden" id="pp" name="pp" value="<?php echo $_GET['pp']; ?>">
+		<input type="hidden" id="pn" name="pn" value="<?php echo $page_number; ?>">
 		<input type="hidden" id="people" name="people" value="<?php echo $people; ?>">
 		<input type="hidden" id="inc" name="inc" value="<?php echo $income; ?>">
 		<input type="hidden" id="ag1" name="ag1" value="<?php echo $age_group1; ?>">
@@ -140,8 +177,16 @@
 		<input type="hidden" id="ag5" name="ag5" value="<?php echo $age_group5; ?>">
 		<input type="hidden" id="ag6" name="ag6" value="<?php echo $age_group6; ?>">
 		<input type="hidden" id="rms" name="rms" value="<?php echo $rooms; ?>">
+		<input type="hidden" id="ap1" name="ap1" value="<?php echo $appliance1; ?>">
+		<input type="hidden" id="ap2" name="ap2" value="<?php echo $appliance2; ?>">
+		<input type="hidden" id="ap3" name="ap3" value="<?php echo $appliance3; ?>">
+		<input type="hidden" id="ap4" name="ap4" value="<?php echo $appliance4; ?>">
+		<input type="hidden" id="ap5" name="ap5" value="<?php echo $appliance5; ?>">
+		<input type="hidden" id="ap6" name="ap6" value="<?php echo $appliance6; ?>">
+		<input type="hidden" id="ap7" name="ap7" value="<?php echo $appliance6; ?>">
+		<input type="hidden" id="ap8" name="ap8" value="<?php echo $appliance6; ?>">
 
-	<div class="item active"> <!-- number of people -->
+		<div class="item <?php if ($_GET['pp'] == 0) {echo "active";}?>"> <!-- number of people -->
 		<h2> How many people live in your home? </h2>
 			<div class="col-xs-6 top-buffer"> <!-- Button 1 -->
 				<button class="meterbutton <?php if ($people == 1) {echo "active";} ?> " id="people" value="1" onClick="radioToggle(this)"> 
@@ -175,7 +220,7 @@
 				</div>
 		</div> <!--  item -->
 
-	<div class="item"> <!-- Age groups -->
+	<div class="item <?php if ($_GET['pp'] == 1) {echo "active";}?>"> <!-- Age groups -->
 		<h2><?php if ($people > 1) { echo "Which age groups do these $people people fall into? <small><br>Click once per person</small>";} else { echo "What are group are you?";} ?> </h2>
 			<div class="row">
 				<div class="col-xs-6 top-buffer"> <!-- Button 1 -->
@@ -247,7 +292,7 @@
 					</div>
 			</div> <!--  row  -->
 		</div> <!--  item -->
-	<div class="item"> <!-- Rooms -->
+	<div class="item <?php if ($_GET['pp'] == 2) {echo "active";}?>"> <!-- Rooms -->
 		<h2>How many rooms do you have use of? <small>Not counting kitchens, bathrooms and toilets</small> </h2>
 			<div class="col-xs-6 top-buffer">
 			<!-- Button 1 -->
@@ -286,9 +331,140 @@
 				<span class="btnCaption"></br>or more</span></button>
 				</div>
      	 	</div>
-	 <div class="item"> <!-- THREE -->
+	<div class="item <?php if ($_GET['pp'] == 3) {echo "active";}?>"> <!-- Income -->
 		<h2>What is your annual household income?</h2>
 			<small>Before any deductions for tax of national insurance</small> </br>
+			<div class="col-xs-6 top-buffer">
+				<!-- Button 1 -->
+				<button class="meterbutton <?php if ($income == 1) {echo "active";} ?>" id="inc" value='1' onClick="radioToggle(this)"> 
+					<span class="btnCaption">less than</span> </br>
+					<span class="btnLabel-sm">15,000</span> </button> </div>
+				<div class="col-xs-6 top-buffer">
+				<!-- Button 2 -->
+					<button class="meterbutton <?php if ($income == 2) {echo "active";} ?>" id="inc" value='2' onClick="radioToggle(this)"> 
+					<span class="btnCaption">up to</span> </br>
+					<span class="btnLabel-sm">25,000</span> </button> </div>
+				<div class="col-xs-6 top-buffer">
+				<!-- Button 3 -->
+					<button class="meterbutton <?php if ($income == 3) {echo "active";} ?>" id="inc" value='3' onClick="radioToggle(this)"> 
+					<span class="btnCaption">up to</span> </br>
+					<span class="btnLabel-sm">35,000</span> </button> </div>
+				<div class="col-xs-6 top-buffer">
+				<!-- Button 4 -->
+					<button class="meterbutton <?php if ($income == 4) {echo "active";} ?>" id="inc" value='4' onClick="radioToggle(this)"> 
+					<span class="btnCaption">up to</span> </br>
+					<span class="btnLabel-sm">50,000</span> </button> </div>
+				<div class="col-xs-6 top-buffer">
+				<!-- Button 5 -->
+					<button class="meterbutton <?php if ($income == 5) {echo "active";} ?>" id="inc" value='5' onClick="radioToggle(this)"> 
+					<span class="btnCaption">up to</span> </br>
+					<span class="btnLabel-sm">75,000</span> </button> </div>
+				<div class="col-xs-6 top-buffer">
+				<!-- Button 6 -->
+					<button class="meterbutton <?php if ($income == 6) {echo "active";} ?>" id="inc" value='6' onClick="radioToggle(this)"> 
+					<span class="btnCaption">more than</span> </br>
+					<span class="btnLabel-sm">75,000</span> </button> </div>
+
+				<div class="col-xs-6 top-buffer">
+				<!-- Prev -->
+					<button class="meterbutton previous" onClick="backPage()"> < Back </button>
+					</div>
+				<div class="col-xs-6 top-buffer">
+				<!-- Next -->
+					<button class="meterbutton next" onClick="nextPage()"> Next > </button>
+				</div>
+			</div> <!--  class item-->
+	<div class="item <?php if ($_GET['pp'] == 4) {echo "active";}?>"> <!-- Appliance count -->
+		<h2>Do you have any of these items?</h2>
+			<small>If so, click to say how many</small> </br>
+			<div class="row">
+				<div class="col-xs-6 top-buffer"> <!-- Button 1 -->
+					<button class="meterbutton <?php if ($appliance1 > 0) {echo "modified";} ?>" style="background: #eee url('img/pv.png'); background-size: 100%" id="ap1" value="<?php echo $_GET['ap1']; ?>" onClick="addOne(this)"> 
+					<span class="btnCaption">PV panels</span> </br>
+					<span class="btnLabel"> <?php echo $_GET['ap1']; ?></span></br>
+					<span class="btnCaption">number of panels</span>
+					<?php if ($_GET['ap1'] > 0) { echo '<button class="meterbutton minus" onClick="minusOne(\'ap1\')">-1</button>';} ?>
+					</button> 
+					</div>
+				<div class="col-xs-6 top-buffer"> <!-- Button 1 -->
+					<button class="meterbutton <?php if ($appliance1 > 0) {echo "modified";} ?>" style="background: #eee url('img/dehumidifier.png'); background-size: 100%" id="ap1" value="<?php echo $_GET['ap1']; ?>" onClick="addOne(this)"> 
+					<span class="btnCaption">Dehumidifier</span> </br>
+					<span class="btnLabel"> <?php echo $_GET['ap1']; ?></span></br>
+					<span class="btnCaption">number of</span>
+					<?php if ($_GET['ap1'] > 0) { echo '<button class="meterbutton minus" onClick="minusOne(\'ap1\')">-1</button>';} ?>
+					</button> 
+					</div>
+			</div> <!--  row -->
+			<div class="row">
+				<div class="col-xs-6 top-buffer"> <!-- Button 1 -->
+					<button class="meterbutton <?php if ($appliance1 > 0) {echo "modified";} ?>" style="background: #eee url('img/ac_unit.png'); background-size: 100%" id="ap1" value="<?php echo $_GET['ap1']; ?>" onClick="addOne(this)"> 
+					<span class="btnCaption">Air conditioner</span> </br>
+					<span class="btnLabel"> <?php echo $_GET['ap1']; ?></span></br>
+					<span class="btnCaption">number of units</span>
+					<?php if ($_GET['ap1'] > 0) { echo '<button class="meterbutton minus" onClick="minusOne(\'ap1\')">-1</button>';} ?>
+					</button> 
+					</div>
+				<div class="col-xs-6 top-buffer"> <!-- Button 1 -->
+					<button class="meterbutton <?php if ($appliance1 > 0) {echo "modified";} ?>" style="background: #eee url('img/dryer.png'); background-size: 100%" id="ap1" value="<?php echo $_GET['ap1']; ?>" onClick="addOne(this)"> 
+					<span class="btnCaption">Tumble dryer</span> </br>
+					<span class="btnLabel"> <?php echo $_GET['ap1']; ?></span></br>
+					<span class="btnCaption">number of</span>
+					<?php if ($_GET['ap1'] > 0) { echo '<button class="meterbutton minus" onClick="minusOne(\'ap1\')">-1</button>';} ?>
+					</button> 
+					</div>
+			</div> <!--  row -->
+			<div class="row">
+				<div class="col-xs-6 top-buffer"> <!-- Button 1 -->
+					<button class="meterbutton <?php if ($appliance1 > 0) {echo "modified";} ?>" style="background: #eee url('img/power_shower.png'); background-size: 100%" id="ap1" value="<?php echo $_GET['ap1']; ?>" onClick="addOne(this)"> 
+					<span class="btnCaption">Power shower</span> </br>
+					<span class="btnLabel"> <?php echo $_GET['ap1']; ?></span></br>
+					<span class="btnCaption">number</span>
+					<?php if ($_GET['ap1'] > 0) { echo '<button class="meterbutton minus" onClick="minusOne(\'ap1\')">-1</button>';} ?>
+					</button> 
+					</div>
+				<div class="col-xs-6 top-buffer"> <!-- Button 1 -->
+					<button class="meterbutton <?php if ($appliance1 > 0) {echo "modified";} ?>" style="background: #eee url('img/fish_tank.png'); background-size: 100%" id="ap1" value="<?php echo $_GET['ap1']; ?>" onClick="addOne(this)"> 
+					<span class="btnCaption">Fish tanks</span> </br>
+					<span class="btnLabel"> <?php echo $_GET['ap1']; ?></span></br>
+					<span class="btnCaption">number of</span>
+					<?php if ($_GET['ap1'] > 0) { echo '<button class="meterbutton minus" onClick="minusOne(\'ap1\')">-1</button>';} ?>
+					</button> 
+					</div>
+			</div> <!--  row -->
+			<div class="row">
+				<div class="col-xs-6 top-buffer"> <!-- Button 1 -->
+					<button class="meterbutton <?php if ($appliance1 > 0) {echo "modified";} ?>" style="background: #eee url('img/fan_heater.png'); background-size: 100%" id="ap1" value="<?php echo $_GET['ap1']; ?>" onClick="addOne(this)"> 
+					<span class="btnCaption">Fan heaters</span> </br>
+					<span class="btnLabel"> <?php echo $_GET['ap1']; ?></span></br>
+					<span class="btnCaption">number of</span>
+					<?php if ($_GET['ap1'] > 0) { echo '<button class="meterbutton minus" onClick="minusOne(\'ap1\')">-1</button>';} ?>
+					</button> 
+					</div>
+				<div class="col-xs-6 top-buffer"> <!-- Button 1 -->
+					<button class="meterbutton <?php if ($appliance1 > 0) {echo "modified";} ?>" style="background: #eee url('img/el_fire.png'); background-size: 100%" id="ap1" value="<?php echo $_GET['ap1']; ?>" onClick="addOne(this)"> 
+					<span class="btnCaption">Electric fire</span> </br>
+					<span class="btnLabel"> <?php echo $_GET['ap1']; ?></span></br>
+					<span class="btnCaption">number of</span>
+					<?php if ($_GET['ap1'] > 0) { echo '<button class="meterbutton minus" onClick="minusOne(\'ap1\')">-1</button>';} ?>
+					</button> 
+					</div>
+			</div> <!--  row -->
+
+
+			<div class="row">
+				<div class="col-xs-6 top-buffer"> <!-- Prev -->
+					<button class="meterbutton previous" onClick="backPage()">  Back </button>
+					</div>
+
+				<div class="col-xs-6 top-buffer"> <!-- Next -->
+					<button class="meterbutton next" onClick="nextPage()"> Next > </button>
+					</div>
+			</div> <!--  row  -->
+		</div> <!--  item -->
+	<div class="item <?php if ($_GET['pp'] == 5) {echo "active";}?>"> <!-- Appliance 2 -->
+	 <div class="item"> <!-- appliances -->
+		<h2>Which of these items do you have?</h2>
+			<small>Click things you own or use.</small> </br>
 			<div class="col-xs-6 top-buffer">
 				<!-- Button 1 -->
 				<button class="meterbutton <?php if ($income == 1) {echo "active";} ?>" id="inc" value='1' onClick="radioToggle(this)"> 
@@ -344,18 +520,20 @@
 <!-- Bootstrap JS -->
 	<!-- this is needed before the bootstrap.min.js -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-	<!-- this one's not working ?!!  <script src="js/jquery.min.js"></script>  
-	
-				interval: 3000,
--->
 	<!-- Latest compiled and minified JavaScript -->
 	<script src="js/bootstrap.min.js"></script>
 	<script>
 		$('#qSlider').carousel({
 				interval: false
-
 		});
+		$('#qSlider').carousel(<?php echo $_GET['pp']; ?>);
+		window.setTimeout(slideToNewPage,500);
+		
+	function slideToNewPage() {
 		$('#qSlider').carousel(<?php echo $page_number; ?>);
+		var previousPage = document.getElementById('pp');
+		previousPage.value = <?php echo $page_number; ?>;
+		  }
 	</script> 
 </body>
 </html>
