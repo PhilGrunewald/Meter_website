@@ -183,8 +183,8 @@
 		<input type="hidden" id="ap4" name="ap4" value="<?php echo $appliance4; ?>">
 		<input type="hidden" id="ap5" name="ap5" value="<?php echo $appliance5; ?>">
 		<input type="hidden" id="ap6" name="ap6" value="<?php echo $appliance6; ?>">
-		<input type="hidden" id="ap7" name="ap7" value="<?php echo $appliance6; ?>">
-		<input type="hidden" id="ap8" name="ap8" value="<?php echo $appliance6; ?>">
+		<input type="hidden" id="ap7" name="ap7" value="<?php echo $appliance7; ?>">
+		<input type="hidden" id="ap8" name="ap8" value="<?php echo $appliance8; ?>">
 
 		<div class="item <?php if ($_GET['pp'] == 0) {echo "active";}?>"> <!-- number of people -->
 		<h2> How many people live in your home? </h2>
@@ -373,12 +373,12 @@
 				<!-- Next -->
 					<button class="meterbutton next" onClick="nextPage()"> Next > </button>
 				</div>
-			</div> <!--  class item-->
+			</div> <!--  class item  -->
 	<div class="item <?php if ($_GET['pp'] == 4) {echo "active";}?>"> <!-- Appliance count -->
-		<h2>Do you have any of these items?</h2>
-			<small>If so, click to say how many</small> </br>
+		<h2>Do you have any of these items?
+			<small>If so, click to say how many. Only count things you actually used in the last year.</small></h2>
 			<div class="row">
-				<div class="col-xs-6 top-buffer"> <!-- Button 1 -->
+				<div class="col-xs-6 top-buffer">
 					<button class="meterbutton <?php if ($appliance1 > 0) {echo "modified";} ?>" style="background: #eee url('img/pv.png'); background-size: 100%" id="ap1" value="<?php echo $_GET['ap1']; ?>" onClick="addOne(this)"> 
 					<span class="btnCaption">PV panels</span> </br>
 					<span class="btnLabel"> <?php echo $_GET['ap1']; ?></span></br>
@@ -386,66 +386,66 @@
 					<?php if ($_GET['ap1'] > 0) { echo '<button class="meterbutton minus" onClick="minusOne(\'ap1\')">-1</button>';} ?>
 					</button> 
 					</div>
-				<div class="col-xs-6 top-buffer"> <!-- Button 1 -->
-					<button class="meterbutton <?php if ($appliance1 > 0) {echo "modified";} ?>" style="background: #eee url('img/dehumidifier.png'); background-size: 100%" id="ap1" value="<?php echo $_GET['ap1']; ?>" onClick="addOne(this)"> 
+				<div class="col-xs-6 top-buffer">
+					<button class="meterbutton <?php if ($appliance2 > 0) {echo "modified";} ?>" style="background: #eee url('img/dehumidifier.png'); background-size: 100%" id="ap2" value="<?php echo $_GET['ap2']; ?>" onClick="addOne(this)"> 
 					<span class="btnCaption">Dehumidifier</span> </br>
-					<span class="btnLabel"> <?php echo $_GET['ap1']; ?></span></br>
+					<span class="btnLabel"> <?php echo $_GET['ap2']; ?></span></br>
 					<span class="btnCaption">number of</span>
-					<?php if ($_GET['ap1'] > 0) { echo '<button class="meterbutton minus" onClick="minusOne(\'ap1\')">-1</button>';} ?>
+					<?php if ($_GET['ap2'] > 0) { echo '<button class="meterbutton minus" onClick="minusOne(\'ap2\')">-1</button>';} ?>
 					</button> 
 					</div>
 			</div> <!--  row -->
 			<div class="row">
-				<div class="col-xs-6 top-buffer"> <!-- Button 1 -->
-					<button class="meterbutton <?php if ($appliance1 > 0) {echo "modified";} ?>" style="background: #eee url('img/ac_unit.png'); background-size: 100%" id="ap1" value="<?php echo $_GET['ap1']; ?>" onClick="addOne(this)"> 
+				<div class="col-xs-6 top-buffer"> 
+					<button class="meterbutton <?php if ($appliance3 > 0) {echo "modified";} ?>" style="background: #eee url('img/ac_unit.png'); background-size: 100%" id="ap3" value="<?php echo $_GET['ap3']; ?>" onClick="addOne(this)"> 
 					<span class="btnCaption">Air conditioner</span> </br>
-					<span class="btnLabel"> <?php echo $_GET['ap1']; ?></span></br>
+					<span class="btnLabel"> <?php echo $_GET['ap3']; ?></span></br>
 					<span class="btnCaption">number of units</span>
-					<?php if ($_GET['ap1'] > 0) { echo '<button class="meterbutton minus" onClick="minusOne(\'ap1\')">-1</button>';} ?>
+					<?php if ($_GET['ap3'] > 0) { echo '<button class="meterbutton minus" onClick="minusOne(\'ap3\')">-1</button>';} ?>
 					</button> 
 					</div>
-				<div class="col-xs-6 top-buffer"> <!-- Button 1 -->
-					<button class="meterbutton <?php if ($appliance1 > 0) {echo "modified";} ?>" style="background: #eee url('img/dryer.png'); background-size: 100%" id="ap1" value="<?php echo $_GET['ap1']; ?>" onClick="addOne(this)"> 
+				<div class="col-xs-6 top-buffer"> 
+					<button class="meterbutton <?php if ($appliance4 > 0) {echo "modified";} ?>" style="background: #eee url('img/dryer.png'); background-size: 100%" id="ap4" value="<?php echo $_GET['ap4']; ?>" onClick="addOne(this)"> 
 					<span class="btnCaption">Tumble dryer</span> </br>
-					<span class="btnLabel"> <?php echo $_GET['ap1']; ?></span></br>
+					<span class="btnLabel"> <?php echo $_GET['ap4']; ?></span></br>
 					<span class="btnCaption">number of</span>
-					<?php if ($_GET['ap1'] > 0) { echo '<button class="meterbutton minus" onClick="minusOne(\'ap1\')">-1</button>';} ?>
+					<?php if ($_GET['ap4'] > 0) { echo '<button class="meterbutton minus" onClick="minusOne(\'ap4\')">-1</button>';} ?>
 					</button> 
 					</div>
 			</div> <!--  row -->
 			<div class="row">
 				<div class="col-xs-6 top-buffer"> <!-- Button 1 -->
-					<button class="meterbutton <?php if ($appliance1 > 0) {echo "modified";} ?>" style="background: #eee url('img/power_shower.png'); background-size: 100%" id="ap1" value="<?php echo $_GET['ap1']; ?>" onClick="addOne(this)"> 
+					<button class="meterbutton <?php if ($appliance5 > 0) {echo "modified";} ?>" style="background: #eee url('img/power_shower.png'); background-size: 100%" id="ap5" value="<?php echo $_GET['ap5']; ?>" onClick="addOne(this)"> 
 					<span class="btnCaption">Power shower</span> </br>
-					<span class="btnLabel"> <?php echo $_GET['ap1']; ?></span></br>
+					<span class="btnLabel"> <?php echo $_GET['ap5']; ?></span></br>
 					<span class="btnCaption">number</span>
-					<?php if ($_GET['ap1'] > 0) { echo '<button class="meterbutton minus" onClick="minusOne(\'ap1\')">-1</button>';} ?>
+					<?php if ($_GET['ap5'] > 0) { echo '<button class="meterbutton minus" onClick="minusOne(\'ap5\')">-1</button>';} ?>
 					</button> 
 					</div>
 				<div class="col-xs-6 top-buffer"> <!-- Button 1 -->
-					<button class="meterbutton <?php if ($appliance1 > 0) {echo "modified";} ?>" style="background: #eee url('img/fish_tank.png'); background-size: 100%" id="ap1" value="<?php echo $_GET['ap1']; ?>" onClick="addOne(this)"> 
+					<button class="meterbutton <?php if ($appliance6 > 0) {echo "modified";} ?>" style="background: #eee url('img/fish_tank.png'); background-size: 100%" id="ap6" value="<?php echo $_GET['ap6']; ?>" onClick="addOne(this)"> 
 					<span class="btnCaption">Fish tanks</span> </br>
-					<span class="btnLabel"> <?php echo $_GET['ap1']; ?></span></br>
+					<span class="btnLabel"> <?php echo $_GET['ap6']; ?></span></br>
 					<span class="btnCaption">number of</span>
-					<?php if ($_GET['ap1'] > 0) { echo '<button class="meterbutton minus" onClick="minusOne(\'ap1\')">-1</button>';} ?>
+					<?php if ($_GET['ap6'] > 0) { echo '<button class="meterbutton minus" onClick="minusOne(\'ap6\')">-1</button>';} ?>
 					</button> 
 					</div>
 			</div> <!--  row -->
 			<div class="row">
 				<div class="col-xs-6 top-buffer"> <!-- Button 1 -->
-					<button class="meterbutton <?php if ($appliance1 > 0) {echo "modified";} ?>" style="background: #eee url('img/fan_heater.png'); background-size: 100%" id="ap1" value="<?php echo $_GET['ap1']; ?>" onClick="addOne(this)"> 
+					<button class="meterbutton <?php if ($appliance7 > 0) {echo "modified";} ?>" style="background: #eee url('img/fan_heater.png'); background-size: 100%" id="ap7" value="<?php echo $_GET['ap7']; ?>" onClick="addOne(this)"> 
 					<span class="btnCaption">Fan heaters</span> </br>
-					<span class="btnLabel"> <?php echo $_GET['ap1']; ?></span></br>
+					<span class="btnLabel"> <?php echo $_GET['ap7']; ?></span></br>
 					<span class="btnCaption">number of</span>
-					<?php if ($_GET['ap1'] > 0) { echo '<button class="meterbutton minus" onClick="minusOne(\'ap1\')">-1</button>';} ?>
+					<?php if ($_GET['ap7'] > 0) { echo '<button class="meterbutton minus" onClick="minusOne(\'ap7\')">-1</button>';} ?>
 					</button> 
 					</div>
 				<div class="col-xs-6 top-buffer"> <!-- Button 1 -->
-					<button class="meterbutton <?php if ($appliance1 > 0) {echo "modified";} ?>" style="background: #eee url('img/el_fire.png'); background-size: 100%" id="ap1" value="<?php echo $_GET['ap1']; ?>" onClick="addOne(this)"> 
+					<button class="meterbutton <?php if ($appliance8 > 0) {echo "modified";} ?>" style="background: #eee url('img/el_fire.png'); background-size: 100%" id="ap8" value="<?php echo $_GET['ap8']; ?>" onClick="addOne(this)"> 
 					<span class="btnCaption">Electric fire</span> </br>
-					<span class="btnLabel"> <?php echo $_GET['ap1']; ?></span></br>
+					<span class="btnLabel"> <?php echo $_GET['ap8']; ?></span></br>
 					<span class="btnCaption">number of</span>
-					<?php if ($_GET['ap1'] > 0) { echo '<button class="meterbutton minus" onClick="minusOne(\'ap1\')">-1</button>';} ?>
+					<?php if ($_GET['ap8'] > 0) { echo '<button class="meterbutton minus" onClick="minusOne(\'ap8\')">-1</button>';} ?>
 					</button> 
 					</div>
 			</div> <!--  row -->
