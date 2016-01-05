@@ -46,16 +46,24 @@
 					appliance6=$_GET[ap6],
 					appliance7=$_GET[ap7],
 					appliance8=$_GET[ap8],
+					provider ='$_GET[pvd]',
 					income=$_GET[inc]  WHERE idHousehold=999";
 				mysqli_query($db, $sql);
 			}
 		}
+		// 
+					// p6pm=$_GET[p6pm],
+					// own=$_GET[own],
+					// pvd='$_GET[pvd]',
+				// p6pm,
+				// own,
 		$sql = "SELECT page_number,
 				people,
 				age_group1, age_group2, age_group3, age_group4, age_group5, age_group6,
 				rooms,
 				appliance1, appliance1, appliance2, appliance3, appliance4, appliance5, appliance6, appliance7, appliance8,
 				income,
+				provider,
 				rooms  FROM Household WHERE idHousehold = 999";
 		$result = mysqli_query($db, $sql);
 		
@@ -80,6 +88,9 @@
 				$appliance7 = $row["appliance7"];
 				$appliance8 = $row["appliance8"];
 				$income 	= $row["income"];
+				$provider 		= $row["provider"];
+				$own 		= $row["own"];
+				$p6pm 		= $row["p6pm"];
 		    }
 		} else {
 		    echo "0 results";
@@ -107,7 +118,8 @@
 
 	function radioToggle(thisButton) {
 		//  the ID of the meterButton pressed identifies which "GET" value to set  
-		var thisValue = parseInt(thisButton.value);
+		// var thisValue = parseInt(thisButton.value);
+		var thisValue = thisButton.value;
 		var thisID = thisButton.getAttribute('id');
 		var parameter = document.getElementById(thisID);
 		parameter.value = thisValue;
@@ -185,8 +197,65 @@
 		<input type="hidden" id="ap6" name="ap6" value="<?php echo $appliance6; ?>">
 		<input type="hidden" id="ap7" name="ap7" value="<?php echo $appliance7; ?>">
 		<input type="hidden" id="ap8" name="ap8" value="<?php echo $appliance8; ?>">
+		<input type="hidden" id="p6pm" name="p6pm" value="<?php echo $p6pm; ?>">
+		<input type="hidden" id="pvd" name="pvd" value="<?php echo $provider; ?>">
+		<input type="hidden" id="own" name="own" value="<?php echo $own; ?>">
 
-		<div class="item <?php if ($_GET['pp'] == 0) {echo "active";}?>"> <!-- number of people -->
+	<div class="item <?php if ($_GET['pp'] == 0) {echo "active";}?>"> <!-- El. provider -->
+		<h2>Who provides your electricity? <?php echo $provider; echo "and " . $pvd . " jo"; ?> xx</h2>
+			<div class="col-xs-6 col-md-4 top-buffer">
+				<button class="meterbutton <?php if ($provider == "bg") {echo "active";} ?> " id="pvd" value="bg" id="pvd" onClick="radioToggle(this)"> 
+				<img src="img/bg.png" class="img-responsive" alt="British Gas">
+				</button>
+				</div>
+			<div class="col-xs-6 col-md-4 top-buffer">
+				<button class="meterbutton <?php if ($provider == "eco") {echo "active";} ?> " id="pvd" value="eco" id="pvd" onClick="radioToggle(this)"> 
+				<img src="img/eco.png" class="img-responsive" alt="Ecotricity">
+				</button>
+				</div>
+			<div class="col-xs-6 col-md-4 top-buffer">
+				<button class="meterbutton <?php if ($provider == "edf") {echo "active";} ?> " id="pvd" value="edf" id="pvd" onClick="radioToggle(this)"> 
+				<img src="img/edf.png" class="img-responsive" alt="EDF">
+				</button>
+				</div>
+			<div class="col-xs-6 col-md-4 top-buffer">
+				<button class="meterbutton <?php if ($provider == "eon") {echo "active";} ?> " id="pvd" value="eon" id="pvd" onClick="radioToggle(this)"> 
+				<img src="img/eon.png" class="img-responsive" alt="e-On">
+				</button>
+				</div>
+			<div class="col-xs-6 col-md-4 top-buffer">
+				<button class="meterbutton <?php if ($provider == 'coop') {echo "active";} ?> " id="pvd" value="coop" id="pvd" onClick="radioToggle(this)"> 
+				<img src="img/coop.png" class="img-responsive" alt="The co-operative">
+				</button>
+				</div>
+			<div class="col-xs-6 col-md-4 top-buffer">
+				<button class="meterbutton <?php if ($provider == "good") {echo "active";} ?> " id="pvd" value="good" id="pvd" onClick="radioToggle(this)"> 
+				<img src="img/good.png" class="img-responsive" alt="Good Energy">
+				</button>
+				</div>
+			<div class="col-xs-6 col-md-4 top-buffer">
+				<button class="meterbutton <?php if ($provider == "npower") {echo "active";} ?> " id="pvd" value="npower" id="pvd" onClick="radioToggle(this)"> 
+				<img src="img/npower.png" class="img-responsive" alt="nPower">
+				</button>
+				</div>
+			<div class="col-xs-6 col-md-4 top-buffer">
+				<button class="meterbutton <?php if ($provider == "sp") {echo "active";} ?> " id="pvd" value="sp" id="pvd" onClick="radioToggle(this)"> 
+				<img src="img/sp.png" class="img-responsive" alt="Scottish Power">
+				</button>
+				</div>
+			<div class="col-xs-6 col-md-4 top-buffer">
+				<button class="meterbutton <?php if ($provider == "sse") {echo "active";} ?> " id="pvd" value="sse" id="pvd" onClick="radioToggle(this)"> 
+				<img src="img/sse.png" class="img-responsive" alt="SSE">
+				</button>
+				</div>
+			<div class="col-xs-6 col-md-4 top-buffer">
+				<button class="meterbutton <?php if ($provider == "oth") {echo "active";} ?> " id="pvd" value="oth" id="pvd" onClick="radioToggle(this)"> 
+				<span class="btnLabel-sm">Other</span>
+				</button>
+				</div>
+		</div> <!--  item -->
+
+	<div class="item <?php if ($_GET['pp'] == 9990) {echo "active";}?>"> <!-- number of people -->
 		<h2> How many people live in your home? </h2>
 			<div class="col-xs-6 top-buffer"> <!-- Button 1 -->
 				<button class="meterbutton <?php if ($people == 1) {echo "active";} ?> " id="people" value="1" onClick="radioToggle(this)"> 
@@ -292,8 +361,43 @@
 					</div>
 			</div> <!--  row  -->
 		</div> <!--  item -->
+
+	<div class="item <?php if ($_GET['pp'] == 9990) {echo "active";}?>"> <!-- occupancy at 6pm -->
+		<h2>On a typical weekday, how many people are at home around 6pm?<small></br>This can include visitors.</small> </h2>
+			<div class="col-xs-6 top-buffer">
+				<button class="meterbutton <?php if ($p6pm == 0) {echo "active";} ?> " id="p6pm" value="0" onClick="radioToggle(this)"> 
+				<span class="btnLabel">0</span>
+				<span class="btnCaption"></br>No one</span></button>
+				</div>
+			<div class="col-xs-6 top-buffer">
+				<button class="meterbutton <?php if ($p6pm == 1) {echo "active";} ?> " id="p6pm" value="1" onClick="radioToggle(this)"> 
+				<span class="btnLabel">1</span>
+				<span class="btnCaption"></br>person</span></button>
+				</div>
+			<div class="col-xs-6 top-buffer">
+				<button class="meterbutton <?php if ($p6pm == 2) {echo "active";} ?> " id="p6pm" value="2" onClick="radioToggle(this)"> 
+				<span class="btnLabel">2</span>
+				<span class="btnCaption"></br>people</span></button>
+				</div>
+			<div class="col-xs-6 top-buffer">
+				<button class="meterbutton <?php if ($p6pm == 3) {echo "active";} ?> " id="p6pm" value="3" onClick="radioToggle(this)"> 
+				<span class="btnLabel">3</span>
+				<span class="btnCaption"></br>people</span></button>
+				</div>
+			<div class="col-xs-6 top-buffer">
+				<button class="meterbutton <?php if ($p6pm == 4) {echo "active";} ?> " id="p6pm" value="4" onClick="radioToggle(this)"> 
+				<span class="btnLabel">4</span>
+				<span class="btnCaption"></br>people</span></button>
+				</div>
+			<div class="col-xs-6 top-buffer">
+				<button class="meterbutton <?php if ($p6pm == 5) {echo "active";} ?> " id="p6pm" value="5" onClick="radioToggle(this)"> 
+				<span class="btnLabel">5</span>
+				<span class="btnCaption"></br>or more</span></button>
+				</div>
+		</div> <!--  item -->
+
 	<div class="item <?php if ($_GET['pp'] == 2) {echo "active";}?>"> <!-- Rooms -->
-		<h2>How many rooms do you have use of? <small>Not counting kitchens, bathrooms and toilets</small> </h2>
+		<h2>How many rooms are in your home?<small></br>Not counting kitchens and bathroom(s)</small> </h2>
 			<div class="col-xs-6 top-buffer">
 			<!-- Button 1 -->
 				<button class="meterbutton <?php if ($rooms == 1) {echo "active";} ?>" id="rms" value="1" onClick="radioToggle(this)"> 
@@ -331,49 +435,81 @@
 				<span class="btnCaption"></br>or more</span></button>
 				</div>
      	 	</div>
-	<div class="item <?php if ($_GET['pp'] == 3) {echo "active";}?>"> <!-- Income -->
-		<h2>What is your annual household income?</h2>
-			<small>Before any deductions for tax of national insurance</small> </br>
-			<div class="col-xs-6 top-buffer">
-				<!-- Button 1 -->
-				<button class="meterbutton <?php if ($income == 1) {echo "active";} ?>" id="inc" value='1' onClick="radioToggle(this)"> 
-					<span class="btnCaption">less than</span> </br>
-					<span class="btnLabel-sm">15,000</span> </button> </div>
-				<div class="col-xs-6 top-buffer">
-				<!-- Button 2 -->
-					<button class="meterbutton <?php if ($income == 2) {echo "active";} ?>" id="inc" value='2' onClick="radioToggle(this)"> 
-					<span class="btnCaption">up to</span> </br>
-					<span class="btnLabel-sm">25,000</span> </button> </div>
-				<div class="col-xs-6 top-buffer">
-				<!-- Button 3 -->
-					<button class="meterbutton <?php if ($income == 3) {echo "active";} ?>" id="inc" value='3' onClick="radioToggle(this)"> 
-					<span class="btnCaption">up to</span> </br>
-					<span class="btnLabel-sm">35,000</span> </button> </div>
-				<div class="col-xs-6 top-buffer">
-				<!-- Button 4 -->
-					<button class="meterbutton <?php if ($income == 4) {echo "active";} ?>" id="inc" value='4' onClick="radioToggle(this)"> 
-					<span class="btnCaption">up to</span> </br>
-					<span class="btnLabel-sm">50,000</span> </button> </div>
-				<div class="col-xs-6 top-buffer">
-				<!-- Button 5 -->
-					<button class="meterbutton <?php if ($income == 5) {echo "active";} ?>" id="inc" value='5' onClick="radioToggle(this)"> 
-					<span class="btnCaption">up to</span> </br>
-					<span class="btnLabel-sm">75,000</span> </button> </div>
-				<div class="col-xs-6 top-buffer">
-				<!-- Button 6 -->
-					<button class="meterbutton <?php if ($income == 6) {echo "active";} ?>" id="inc" value='6' onClick="radioToggle(this)"> 
-					<span class="btnCaption">more than</span> </br>
-					<span class="btnLabel-sm">75,000</span> </button> </div>
 
-				<div class="col-xs-6 top-buffer">
-				<!-- Prev -->
-					<button class="meterbutton previous" onClick="backPage()"> < Back </button>
-					</div>
-				<div class="col-xs-6 top-buffer">
-				<!-- Next -->
-					<button class="meterbutton next" onClick="nextPage()"> Next > </button>
+	<div class="item <?php if ($_GET['pp'] == 9990) {echo "active";}?>"> <!-- El. provider -->
+		<h2>Who provides your electricity? <?php echo $provider; ?> xx</h2>
+			<div class="col-xs-6 col-md-4 top-buffer">
+				<button class="meterbutton <?php if ($pvd == "bg") {echo "active";} ?> " id="pvd" value="bg" id="pvd" onClick="radioToggle(this)"> 
+				<img src="img/bg.png" class="img-responsive" alt="British Gas">
+				</button>
 				</div>
-			</div> <!--  class item  -->
+			<div class="col-xs-6 col-md-4 top-buffer">
+				<button class="meterbutton <?php if ($pvd == "eco") {echo "active";} ?> " id="pvd" value="eco" id="pvd" onClick="radioToggle(this)"> 
+				<img src="img/eco.png" class="img-responsive" alt="Ecotricity">
+				</button>
+				</div>
+			<div class="col-xs-6 col-md-4 top-buffer">
+				<button class="meterbutton <?php if ($pvd == "edf") {echo "active";} ?> " id="pvd" value="edf" id="pvd" onClick="radioToggle(this)"> 
+				<img src="img/edf.png" class="img-responsive" alt="EDF">
+				</button>
+				</div>
+			<div class="col-xs-6 col-md-4 top-buffer">
+				<button class="meterbutton <?php if ($pvd == "eon") {echo "active";} ?> " id="pvd" value="eon" id="pvd" onClick="radioToggle(this)"> 
+				<img src="img/eon.png" class="img-responsive" alt="e-On">
+				</button>
+				</div>
+			<div class="col-xs-6 col-md-4 top-buffer">
+				<button class="meterbutton <?php if ($pvd == "coop") {echo "active";} ?> " id="pvd" value="coop" id="pvd" onClick="radioToggle(this)"> 
+				<img src="img/coop.png" class="img-responsive" alt="The co-operative">
+				</button>
+				</div>
+			<div class="col-xs-6 col-md-4 top-buffer">
+				<button class="meterbutton <?php if ($pvd == "good") {echo "active";} ?> " id="pvd" value="good" id="pvd" onClick="radioToggle(this)"> 
+				<img src="img/good.png" class="img-responsive" alt="Good Energy">
+				</button>
+				</div>
+			<div class="col-xs-6 col-md-4 top-buffer">
+				<button class="meterbutton <?php if ($pvd == "npower") {echo "active";} ?> " id="pvd" value="npower" id="pvd" onClick="radioToggle(this)"> 
+				<img src="img/npower.png" class="img-responsive" alt="nPower">
+				</button>
+				</div>
+			<div class="col-xs-6 col-md-4 top-buffer">
+				<button class="meterbutton <?php if ($pvd == "sp") {echo "active";} ?> " id="pvd" value="sp" id="pvd" onClick="radioToggle(this)"> 
+				<img src="img/sp.png" class="img-responsive" alt="Scottish Power">
+				</button>
+				</div>
+			<div class="col-xs-6 col-md-4 top-buffer">
+				<button class="meterbutton <?php if ($pvd == "sse") {echo "active";} ?> " id="pvd" value="sse" id="pvd" onClick="radioToggle(this)"> 
+				<img src="img/sse.png" class="img-responsive" alt="SSE">
+				</button>
+				</div>
+			<div class="col-xs-6 col-md-4 top-buffer">
+				<button class="meterbutton <?php if ($pvd == "oth") {echo "active";} ?> " id="pvd" value="oth" id="pvd" onClick="radioToggle(this)"> 
+				<span class="btnLabel-sm">Other</span>
+				</button>
+				</div>
+		</div> <!--  item -->
+
+	<div class="item <?php if ($_GET['pp'] == 9990) {echo "active";}?>"> <!-- ownership -->
+		<h2>Do you own or rent your property?</h2>
+			<div class="col-xs-7 top-buffer">
+				<button class="meterbutton <?php if ($own == 1) {echo "active";} ?> " id="own" value="1" onClick="radioToggle(this)"> 
+				<span class="btnLabel-sm">Own</span>
+				<span class="btnCaption"></br>With or without mortgage</span></button>
+				</div>
+			<div class="col-xs-7 top-buffer">
+				<button class="meterbutton <?php if ($own == 2) {echo "active";} ?> " id="own" value="2" onClick="radioToggle(this)"> 
+				<span class="btnLabel-sm">Rent</span>
+				<span class="btnCaption"></br>Private landlord</span></button>
+				</div>
+			<div class="col-xs-7 top-buffer">
+				<button class="meterbutton <?php if ($own == 3) {echo "active";} ?> " id="own" value="3" onClick="radioToggle(this)"> 
+				<span class="btnLabel-sm">Rent</span>
+				<span class="btnCaption"></br>Social landlord</span></button>
+				</div>
+		</div> <!--  item -->
+
+
 	<div class="item <?php if ($_GET['pp'] == 4) {echo "active";}?>"> <!-- Appliance count -->
 		<h2>Do you have any of these items?
 			<small>If so, click to say how many. Only count things you actually used in the last year.</small></h2>
@@ -461,10 +597,58 @@
 					</div>
 			</div> <!--  row  -->
 		</div> <!--  item -->
+
+
 	<div class="item <?php if ($_GET['pp'] == 5) {echo "active";}?>"> <!-- Appliance 2 -->
-	 <div class="item"> <!-- appliances -->
+		<div class="item"> <!-- appliances -->
 		<h2>Which of these items do you have?</h2>
 			<small>Click things you own or use.</small> </br>
+			<div class="col-xs-6 top-buffer">
+				<!-- Button 1 -->
+				<button class="meterbutton <?php if ($income == 1) {echo "active";} ?>" id="inc" value='1' onClick="radioToggle(this)"> 
+					<span class="btnCaption">Night storage heaters [count], TV [count], gas boiler, heat pump, under floor heating</span> </br>
+					<span class="btnLabel-sm">15,000</span> </button> </div>
+				<div class="col-xs-6 top-buffer">
+				<!-- Button 2 -->
+					<button class="meterbutton <?php if ($income == 2) {echo "active";} ?>" id="inc" value='2' onClick="radioToggle(this)"> 
+					<span class="btnCaption">up to</span> </br>
+					<span class="btnLabel-sm">25,000</span> </button> </div>
+				<div class="col-xs-6 top-buffer">
+				<!-- Button 3 -->
+					<button class="meterbutton <?php if ($income == 3) {echo "active";} ?>" id="inc" value='3' onClick="radioToggle(this)"> 
+					<span class="btnCaption">up to</span> </br>
+					<span class="btnLabel-sm">35,000</span> </button> </div>
+				<div class="col-xs-6 top-buffer">
+				<!-- Button 4 -->
+					<button class="meterbutton <?php if ($income == 4) {echo "active";} ?>" id="inc" value='4' onClick="radioToggle(this)"> 
+					<span class="btnCaption">up to</span> </br>
+					<span class="btnLabel-sm">50,000</span> </button> </div>
+				<div class="col-xs-6 top-buffer">
+				<!-- Button 5 -->
+					<button class="meterbutton <?php if ($income == 5) {echo "active";} ?>" id="inc" value='5' onClick="radioToggle(this)"> 
+					<span class="btnCaption">up to</span> </br>
+					<span class="btnLabel-sm">75,000</span> </button> </div>
+				<div class="col-xs-6 top-buffer">
+				<!-- Button 6 -->
+					<button class="meterbutton <?php if ($income == 6) {echo "active";} ?>" id="inc" value='6' onClick="radioToggle(this)"> 
+					<span class="btnCaption">more than</span> </br>
+					<span class="btnLabel-sm">75,000</span> </button> </div>
+
+				<div class="col-xs-6 top-buffer">
+				<!-- Prev -->
+					<button class="meterbutton previous" onClick="backPage()"> < Back </button>
+					</div>
+				<div class="col-xs-6 top-buffer">
+				<!-- Next -->
+					<button class="meterbutton next" onClick="nextPage()"> Next > </button>
+				</div>
+			</div> <!--  class item-->
+
+
+
+	<div class="item <?php if ($_GET['pp'] == 3) {echo "active";}?>"> <!-- Income -->
+		<h2>What is your annual household income?</h2>
+			<small>Before any deductions for tax of national insurance</small> </br>
 			<div class="col-xs-6 top-buffer">
 				<!-- Button 1 -->
 				<button class="meterbutton <?php if ($income == 1) {echo "active";} ?>" id="inc" value='1' onClick="radioToggle(this)"> 
@@ -504,7 +688,8 @@
 				<!-- Next -->
 					<button class="meterbutton next" onClick="nextPage()"> Next > </button>
 				</div>
-			</div> <!--  class item-->
+			</div> <!--  class item  -->
+
     </div><!-- carousel-inner -->
 </form>
 
