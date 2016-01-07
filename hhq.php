@@ -1,4 +1,20 @@
 <!DOCTYPE HTML>
+<!--
+ consider including:
+- pets
+- type of house?
+- have you undertaking particular efficiency measures
+	- low energy lighting
+	- double / triple galsing
+	- draft proofing
+	- in home display
+- how confident are you about the bill
+	- I took it from the bill
+	- it was a guess
+-	- might be out by £100
+	- might be out by more
+- Any comments / other appliances
+ -->
 <html lang="en">
 <head>
 	<meta charset="utf-8"/>
@@ -212,9 +228,17 @@
 					</div>
 					";
 		}
+
+		function navButton($type){
+			return "<div class='col-xs-6 top-buffer'> 
+				<button class='meterbutton next' onClick='$type()'>
+				<img src='img/$type.png' class='img-responsive' alt='$type'>
+				</button>
+				</div>";
+		}
 ?>
 <script type="text/javascript">
-	function backPage() {
+	function back() {
 		var page = document.getElementById('pn');
 		var previousPage = document.getElementById('pp');
 		var pageNumber = parseInt(page.value);
@@ -223,7 +247,10 @@
 		page.value = pageNumber;
 		}
 
-	function nextPage() {
+	function yes() {
+		next();
+	}
+	function next() {
 		var page = document.getElementById('pn');
 		var previousPage = document.getElementById('pp');
 		var pageNumber = parseInt(page.value);
@@ -239,7 +266,7 @@
 		var thisID = thisButton.getAttribute('id');
 		var parameter = document.getElementById(thisID);
 		parameter.value = thisValue;
-		nextPage();
+		next();
 		}
 
 	function toggle(thisButton) {
@@ -271,11 +298,12 @@
 		}
     </script>
 
-<?php include("nav_bar.php"); ?>
+<?php //include("nav_bar.php"); ?>
+<!--
+  -->
 
 
 <div class="container">		 <!-- CONTENT - row 1 -->
-	</br> </br> </br> </br>
 	<div class="row">
 
 		<div class="col-xs-8 col-xs-push-2 col-sm-6 col-sm-push-3"  style="background-color: #ffffff; ">
@@ -341,12 +369,8 @@
 		<p> Before we can send you your kit, please answer a few simple questions. This should take no more than 3 minutes.</p>
 		<p>First, can you confirm that these are the correct contact details for you?</p>
 		<h3>Email: <?php echo $email; ?> </h3>
-			<div class="col-xs-6 top-buffer"> <!-- Next -->
-					<button class="meterbutton previous" onClick="nextPage()">No,</br><small>not me</small></button>
-					</div>
-			<div class="col-xs-6 top-buffer"> <!-- Next -->
-					<button class="meterbutton next" onClick="nextPage()">Yes</button>
-					</div>
+		<?php echo navButton('no'); ?>
+		<?php echo navButton('yes'); ?>
 		</div> <!--  item -->
 
 	<div class="item <?php if ($_GET['pp'] == 1) {echo "active";}?>"> <!-- number of people -->
@@ -360,9 +384,7 @@
 		</div>
 		<div class="col-xs-6 top-buffer">
 		</div> 
-		<div class="col-xs-6 top-buffer"> <!-- Next -->
-				<button class="meterbutton next" onClick="nextPage()">Next</button>
-				</div>
+		<?php echo navButton('next'); ?>
 	</div>
 
 	<div class="item <?php if ($_GET['pp'] == 2) {echo "active";}?>"> <!-- number of people -->
@@ -383,15 +405,8 @@
 			<?php echo countButton('ag4','Age 35 - 50','people'); ?>
 			<?php echo countButton('ag5','Age 51 - 70','people'); ?>
 			<?php echo countButton('ag6','Over 70','people'); ?>
-
-
-			<div class="col-xs-6 top-buffer"> <!-- Prev -->
-					<button class="meterbutton previous" onClick="backPage()">  Back </button>
-					</div>
-
-			<div class="col-xs-6 top-buffer"> <!-- Next -->
-					<button class="meterbutton next" onClick="nextPage()"> Next > </button>
-					</div>
+			<?php echo navButton('back'); ?>
+			<?php echo navButton('next'); ?>
 		</div> <!--  item -->
 
 	<div class="item <?php if ($_GET['pp'] == 4) {echo "active";}?>"> <!-- occupancy at 6pm -->
@@ -437,12 +452,8 @@
 				<?php echo toggleButton("Electric hob", "ba6", "hob.png"); ?>
 				<?php echo toggleButton("Fish tank", "ab7", "fish_tank.png"); ?>
 				<?php echo toggleButton("Hedge trimmer", "ab7", "fish_tank.png"); ?>
-				<div class="col-xs-6 top-buffer"> <!-- Prev -->
-					<button class="meterbutton previous" onClick="backPage()"> < Back </button>
-					</div>
-				<div class="col-xs-6 top-buffer"> <!-- Next -->
-					<button class="meterbutton next" onClick="nextPage()"> Next > </button>
-					</div>
+				<?php echo navButton('back'); ?>
+				<?php echo navButton('next'); ?>
 			</div> <!--  class item-->
 
 	<div class="item <?php if ($_GET['pp'] == 8) {echo "active";}?>"> <!-- Appliance count -->
@@ -454,7 +465,9 @@
 					<span class="btnCaption">PV panels</span> </br>
 					<span class="btnLabel"> <?php echo $_GET['ap1']; ?></span></br>
 					<span class="btnCaption">number of panels</span>
-					<?php if ($_GET['ap1'] > 0) { echo '<button class="meterbutton minus" onClick="minusOne(\'ap1\')">-1</button>';} ?>
+					<?php if ($_GET['ap1'] > 0) { echo '<button class="meterbutton minus" onClick="minusOne(\'ap1\')">
+					<img src="img/minus.png" class="img-responsive" alt="-1">
+					</button>';} ?>
 					</button> 
 					</div>
 				<div class="col-xs-6 top-buffer">
@@ -522,13 +535,8 @@
 			</div> <!--  row -->
 
 			<div class="row">
-				<div class="col-xs-6 top-buffer"> <!-- Prev -->
-					<button class="meterbutton previous" onClick="backPage()">  Back </button>
-					</div>
-
-				<div class="col-xs-6 top-buffer"> <!-- Next -->
-					<button class="meterbutton next" onClick="nextPage()"> Next > </button>
-					</div>
+				<?php echo navButton('back'); ?>
+				<?php echo navButton('next'); ?>
 			</div> <!--  row  -->
 		</div> <!--  item -->
 
@@ -576,12 +584,8 @@
 				<?php echo radioButton("4","inc", "50,000", "up to"); ?>
 				<?php echo radioButton("5","inc", "75,000", "up to"); ?>
 				<?php echo radioButton("6","inc", "75,000", "more than"); ?>
-				<div class="col-xs-6 top-buffer"> <!-- Prev -->
-					<button class="meterbutton previous" onClick="backPage()"> < Back </button>
-					</div>
-				<div class="col-xs-6 top-buffer"> <!-- Next -->
-					<button class="meterbutton next" onClick="nextPage()"> Next > </button>
-				</div>
+				<?php echo navButton('back'); ?>
+				<?php echo navButton('next'); ?>
 			</div> <!--  class item  -->
 
 
