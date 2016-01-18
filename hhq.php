@@ -27,13 +27,7 @@
 
 <body>
 	<?php
-		// Define connection settings
-		//$server = '109.74.196.205';
-		$server = 'localhost';
-		$dbName = 'Meter';
-		$dbUserName = 'phil';
-		$dbUserPass = 'SSartori12';
-		
+		include 'db.php';
 		// Connect to the database server
 		$db = mysqli_connect($server,$dbUserName,$dbUserPass,$dbName);
 		
@@ -41,20 +35,25 @@
 		    print '<p class="alert alert-error">Oh, dear. The connect failed: ' . mysqli_connect_error() . '. Please email philipp.grunewald@ouce.ox.ac.uk about it.</p>';
 		    exit();
 		} else {
-			if ($_GET['people'] !== "xx") {
+			$idHousehold = $_GET[id];
+			$result = mysqli_query($db, "SELECT security_code FROM Household WHERE idHousehold = $idHousehold");
+			$row 	= mysqli_fetch_assoc($result);
+			$security_code = $row["security_code"];
+
+			if ($security_code == $_GET[sc]) {
 				$sql="UPDATE Household SET 
-					page_number=$_GET[pn],
-					people=$_GET[people],
-					age_group1=$_GET[ag1],
-					age_group1=$_GET[ag1],
-					age_group2=$_GET[ag2],
-					age_group3=$_GET[ag3],
-					age_group4=$_GET[ag4],
-					age_group5=$_GET[ag5],
-					age_group6=$_GET[ag6],
-					p6pm=$_GET[p6pm],
-					rooms=$_GET[rms],
-					own=$_GET[own],
+					page_number		=$_GET[pn],
+					people			=$_GET[people],
+					age_group1		=$_GET[ag1],
+					age_group1		=$_GET[ag1],
+					age_group2		=$_GET[ag2],
+					age_group3		=$_GET[ag3],
+					age_group4		=$_GET[ag4],
+					age_group5		=$_GET[ag5],
+					age_group6		=$_GET[ag6],
+					p6pm			=$_GET[p6pm],
+					rooms			=$_GET[rms],
+					own				=$_GET[own],
 					appliance1=$_GET[ap1],
 					appliance1=$_GET[ap1],
 					appliance2=$_GET[ap2],
@@ -74,89 +73,96 @@
 					appliance_b7=$_GET[ab7],
 					appliance_b8=$_GET[ab8],
 					provider ='$_GET[pvd]',
-					income=$_GET[inc]  WHERE idHousehold=999";
+					income=$_GET[inc]  WHERE idHousehold=$idHousehold";
 				mysqli_query($db, $sql);
-			}
-		}
 
-		$sql = "SELECT page_number,
-				people,
-				age_group1, age_group2, age_group3, age_group4, age_group5, age_group6,
-				p6pm,
-				rooms,
-				appliance1, appliance1, appliance2, appliance3, appliance4, appliance5, appliance6, appliance7, appliance8,
-				appliance_b1, appliance_b1, appliance_b2, appliance_b3, appliance_b4, appliance_b5, appliance_b6, appliance_b7, appliance_b8,
-				income,
-				provider,
-				own,
-				Contact_idContact,
-				rooms  FROM Household WHERE idHousehold = 999";
-		$result = mysqli_query($db, $sql);
+				$sql = "SELECT page_number,
+						people,
+						age_group1, age_group2, age_group3, age_group4, age_group5, age_group6,
+						p6pm,
+						rooms,
+						appliance1, appliance1, appliance2, appliance3, appliance4, appliance5, appliance6, appliance7, appliance8,
+						appliance_b1, appliance_b1, appliance_b2, appliance_b3, appliance_b4, appliance_b5, appliance_b6, appliance_b7, appliance_b8,
+						income,
+						provider,
+						own,
+						Contact_idContact,
+						rooms  FROM Household WHERE idHousehold = $idHousehold";
+				$result = mysqli_query($db, $sql);
+
+				if (mysqli_num_rows($result) > 0) {
+				    // output data of each row
+				    while($row = mysqli_fetch_assoc($result)) {
+						$page_number = $row["page_number"];
+						$people 	= $row["people"];
+						$age_group1 = $row["age_group1"];
+						$age_group2 = $row["age_group2"];
+						$age_group3 = $row["age_group3"];
+						$age_group4 = $row["age_group4"];
+						$age_group5 = $row["age_group5"];
+						$age_group6 = $row["age_group6"];
+						$rooms 		= $row["rooms"];
+						$appliance_b1 = $row["appliance_b1"];
+						$appliance_b2 = $row["appliance_b2"];
+						$appliance_b3 = $row["appliance_b3"];
+						$appliance_b4 = $row["appliance_b4"];
+						$appliance_b5 = $row["appliance_b5"];
+						$appliance_b6 = $row["appliance_b6"];
+						$appliance_b7 = $row["appliance_b7"];
+						$appliance_b8 = $row["appliance_b8"];
+						$appliance1 = $row["appliance1"];
+						$appliance2 = $row["appliance2"];
+						$appliance3 = $row["appliance3"];
+						$appliance4 = $row["appliance4"];
+						$appliance5 = $row["appliance5"];
+						$appliance6 = $row["appliance6"];
+						$appliance7 = $row["appliance7"];
+						$appliance8 = $row["appliance8"];
+						$income 	= $row["income"];
+						$provider 		= $row["provider"];
+						$own 		= $row["own"];
+						$p6pm 		= $row["p6pm"];
+						$ContactID	= $row["Contact_idContact"];
+
+				}
+
+				$sql = "SELECT Name, Surname, email, Address1, Address2, Postcode From Contact WHERE idContact = $ContactID";
+				$result = mysqli_query($db, $sql);
+				if (mysqli_num_rows($result) > 0) {
+				    // output data of each row
+				    while($row = mysqli_fetch_assoc($result)) {
+						$name 		= $row["Name"];
+						$surname 	= $row["Surname"];
+						$email 		= $row["email"];
+						$Address1	= $row["Address1"];
+						$Address2	= $row["Address2"];
+						$Postcode	= $row["Postcode"];
+					}
+				}
+						} else {
+						    echo "0 results";
+						}
+
+				if ($_GET[address1] !== "") { 
+					$sql="UPDATE Contact SET Address1 = '$_GET[address1]' WHERE idContact = $ContactID";
+					mysqli_query($db, $sql);
+					}
+				if ($_GET[address2] !== "") { 
+					$sql="UPDATE Contact SET Address2 = '$_GET[address2]' WHERE idContact = $ContactID";
+					mysqli_query($db, $sql);
+					}
+				if ($_GET[post_code] !== "") { 
+					$sql="UPDATE Contact SET Postcode = '$_GET[post_code]' WHERE idContact = $ContactID";
+					mysqli_query($db, $sql);
+					}
+			} // end if security check passed
+			else {
+					$page_number = 0;
+				}
+		} // end if successful db connection
+
 		
-		if (mysqli_num_rows($result) > 0) {
-		    // output data of each row
-		    while($row = mysqli_fetch_assoc($result)) {
-				$page_number = $row["page_number"];
-				$people 	= $row["people"];
-				$age_group1 = $row["age_group1"];
-				$age_group2 = $row["age_group2"];
-				$age_group3 = $row["age_group3"];
-				$age_group4 = $row["age_group4"];
-				$age_group5 = $row["age_group5"];
-				$age_group6 = $row["age_group6"];
-				$rooms 		= $row["rooms"];
-				$appliance_b1 = $row["appliance_b1"];
-				$appliance_b2 = $row["appliance_b2"];
-				$appliance_b3 = $row["appliance_b3"];
-				$appliance_b4 = $row["appliance_b4"];
-				$appliance_b5 = $row["appliance_b5"];
-				$appliance_b6 = $row["appliance_b6"];
-				$appliance_b7 = $row["appliance_b7"];
-				$appliance_b8 = $row["appliance_b8"];
-				$appliance1 = $row["appliance1"];
-				$appliance2 = $row["appliance2"];
-				$appliance3 = $row["appliance3"];
-				$appliance4 = $row["appliance4"];
-				$appliance5 = $row["appliance5"];
-				$appliance6 = $row["appliance6"];
-				$appliance7 = $row["appliance7"];
-				$appliance8 = $row["appliance8"];
-				$income 	= $row["income"];
-				$provider 		= $row["provider"];
-				$own 		= $row["own"];
-				$p6pm 		= $row["p6pm"];
-				$ContactID	= $row["Contact_idContact"];
-		    }
-		} else {
-		    echo "0 results";
-		}
-		$sql = "SELECT Name, Surname, email, Address1, Address2, Postcode From Contact WHERE idContact = $ContactID";
-		$result = mysqli_query($db, $sql);
-		if (mysqli_num_rows($result) > 0) {
-		    // output data of each row
-		    while($row = mysqli_fetch_assoc($result)) {
-				$name 		= $row["Name"];
-				$surname 	= $row["Surname"];
-				$email 		= $row["email"];
-				$Address1	= $row["Address1"];
-				$Address2	= $row["Address2"];
-				$Postcode	= $row["Postcode"];
-			}
-		}
-		if ($_GET[address1] !== "") { 
-			$sql="UPDATE Contact SET Address1 = '$_GET[address1]' WHERE idContact = $ContactID";
-			mysqli_query($db, $sql);
-			}
-		if ($_GET[address2] !== "") { 
-			$sql="UPDATE Contact SET Address2 = '$_GET[address2]' WHERE idContact = $ContactID";
-			mysqli_query($db, $sql);
-			}
-		if ($_GET[post_code] !== "") { 
-			$sql="UPDATE Contact SET Postcode = '$_GET[post_code]' WHERE idContact = $ContactID";
-			mysqli_query($db, $sql);
-			}
-		?>
-<?php
+
 		function toggleButton($label,$ID,$url) {
 			$value = $_GET["$ID"];
 			$active = "";
@@ -331,6 +337,8 @@
     <div class="carousel-inner">
 		<!-- pass php variables to GET form elements -->
 		<!-- stored previous page when advancing or moving back pages -->
+		<input type="hidden" id="id" name="id" value="<?php echo $idHousehold; ?>">
+		<input type="hidden" id="sc" name="sc" value="<?php echo $security_code; ?>">
 		<input type="hidden" id="pp" name="pp" value="<?php echo $_GET['pp']; ?>">
 		<input type="hidden" id="pn" name="pn" value="<?php echo $page_number; ?>">
 		<input type="hidden" id="people" name="people" value="<?php echo $people; ?>">
@@ -364,13 +372,25 @@
 		<input type="hidden" id="monthly" name="monthly">
 
 	<div class="item <?php if ($_GET['pp'] == 0) {echo "active";}?>"> <!-- number of people -->
-		<h2> Dear <?php echo $name; echo " ". $surname; ?> </h2>
-		<p>Thank you for taking part in this research with the University of Oxford.</p>
+		<?php
+			if ($security_code == $_GET[sc]) {
+		echo "<h2> Dear ". $name." ". $surname."</h2>";
+		echo "<p>Thank you for taking part in this research with the University of Oxford.</p>
 		<p> Before we can send you your kit, please answer a few simple questions. This should take no more than 3 minutes.</p>
-		<p>First, can you confirm that these are the correct contact details for you?</p>
-		<h3>Email: <?php echo $email; ?> </h3>
-		<?php echo navButton('no'); ?>
-		<?php echo navButton('yes'); ?>
+		<p>First, can you confirm that these are the correct contact details for you?</p>";
+
+		echo "<h3>Email: "  . $email .  "</h3>";
+		echo $_GET['id'];
+		echo $_GET['sc'];
+		echo navButton('no');
+		echo navButton('yes');
+			} else {
+				echo "<h2>Thank you for your interest in this research project.</h2>
+					<p>To take part, please <a href='./register.php'>register here</a>.</p>
+					<p>If you think that you already registered, please email philipp.grunewald@ouce.ox.ac.uk</p>
+					<p>Thank you.</p>";
+			}
+		?>
 		</div> <!--  item -->
 
 	<div class="item <?php if ($_GET['pp'] == 1) {echo "active";}?>"> <!-- number of people -->
