@@ -1,8 +1,6 @@
 <!DOCTYPE HTML>
 <!--
  consider including:
-- pets
-- type of house?
 - have you undertaking particular efficiency measures
 	- low energy lighting
 	- double / triple galsing
@@ -30,20 +28,26 @@
 		include 'db.php';
 		// Connect to the database server
 		$db = mysqli_connect($server,$dbUserName,$dbUserPass,$dbName);
-		
 		if (mysqli_connect_errno()) {
 		    print '<p class="alert alert-error">Oh, dear. The connect failed: ' . mysqli_connect_error() . '. Please email philipp.grunewald@ouce.ox.ac.uk about it.</p>';
 		    exit();
 		} else {
 			$idHousehold = $_GET[id];
+			$user_code = $_GET[sc];
 			$result = mysqli_query($db, "SELECT security_code FROM Household WHERE idHousehold = $idHousehold");
-			$row 	= mysqli_fetch_assoc($result);
-			$security_code = $row["security_code"];
+			if ($result) {
+				$row 	= mysqli_fetch_assoc($result);
+				$security_code = $row["security_code"];
+			} else {
+				// make sure security code in not equal to sc
+				$security_code = $user_code+1;
+			}
 
-			if ($security_code == $_GET[sc]) {
+			if ($security_code == $user_code) {
 				$sql="UPDATE Household SET 
 					page_number		=$_GET[pn],
 					people			=$_GET[people],
+					house_type		=$_GET[ht],
 					age_group1		=$_GET[ag1],
 					age_group1		=$_GET[ag1],
 					age_group2		=$_GET[ag2],
@@ -54,33 +58,39 @@
 					p6pm			=$_GET[p6pm],
 					rooms			=$_GET[rms],
 					own				=$_GET[own],
-					appliance1=$_GET[ap1],
-					appliance1=$_GET[ap1],
-					appliance2=$_GET[ap2],
-					appliance3=$_GET[ap3],
-					appliance4=$_GET[ap4],
-					appliance5=$_GET[ap5],
-					appliance6=$_GET[ap6],
-					appliance7=$_GET[ap7],
-					appliance8=$_GET[ap8],
-					appliance_b1=$_GET[ab1],
-					appliance_b1=$_GET[ab1],
-					appliance_b2=$_GET[ab2],
-					appliance_b3=$_GET[ab3],
-					appliance_b4=$_GET[ab4],
-					appliance_b5=$_GET[ab5],
-					appliance_b6=$_GET[ab6],
-					appliance_b7=$_GET[ab7],
-					appliance_b8=$_GET[ab8],
-					provider ='$_GET[pvd]',
-					income=$_GET[inc]  WHERE idHousehold=$idHousehold";
+					pet1			=$_GET[pt1],
+					pet2			=$_GET[pt2],
+					pet3			=$_GET[pt3],
+					pet4			='$_GET[pt4]',
+					appliance1		=$_GET[ap1],
+					appliance2		=$_GET[ap2],
+					appliance3		=$_GET[ap3],
+					appliance4		=$_GET[ap4],
+					appliance5		=$_GET[ap5],
+					appliance6		=$_GET[ap6],
+					appliance7		=$_GET[ap7],
+					appliance8		=$_GET[ap8],
+					appliance_b1	=$_GET[ab1],
+					appliance_b1	=$_GET[ab1],
+					appliance_b2	=$_GET[ab2],
+					appliance_b3	=$_GET[ab3],
+					appliance_b4	=$_GET[ab4],
+					appliance_b5	=$_GET[ab5],
+					appliance_b6	=$_GET[ab6],
+					appliance_b7	=$_GET[ab7],
+					appliance_b8	=$_GET[ab8],
+					provider 		='$_GET[pvd]',
+					income			=$_GET[inc]  
+					WHERE idHousehold=$idHousehold";
 				mysqli_query($db, $sql);
 
 				$sql = "SELECT page_number,
 						people,
 						age_group1, age_group2, age_group3, age_group4, age_group5, age_group6,
 						p6pm,
+						house_type,
 						rooms,
+						pet1, pet2, pet3, pet4,
 						appliance1, appliance1, appliance2, appliance3, appliance4, appliance5, appliance6, appliance7, appliance8,
 						appliance_b1, appliance_b1, appliance_b2, appliance_b3, appliance_b4, appliance_b5, appliance_b6, appliance_b7, appliance_b8,
 						income,
@@ -95,6 +105,7 @@
 				    while($row = mysqli_fetch_assoc($result)) {
 						$page_number = $row["page_number"];
 						$people 	= $row["people"];
+						$house_type	= $row["house_type"];
 						$age_group1 = $row["age_group1"];
 						$age_group2 = $row["age_group2"];
 						$age_group3 = $row["age_group3"];
@@ -102,6 +113,10 @@
 						$age_group5 = $row["age_group5"];
 						$age_group6 = $row["age_group6"];
 						$rooms 		= $row["rooms"];
+						$pet1		= $row["pet1"];
+						$pet2		= $row["pet2"];
+						$pet3		= $row["pet3"];
+						$pet4		= $row["pet4"];
 						$appliance_b1 = $row["appliance_b1"];
 						$appliance_b2 = $row["appliance_b2"];
 						$appliance_b3 = $row["appliance_b3"];
@@ -174,7 +189,7 @@
 			return "
 				<div class='col-xs-6 top-buffer'>
 				<button class='meterbutton $active' 
-					style=\"background: url('img/$url') $bg; background-size: 100%\" 
+					style=\"background: url('img/$url') $bg;background-repeat: no-repeat; background-position: center; background-size: 100%\" 
 					id='$ID' value='$value' onClick='toggle(this)'>
 				<span class='btnLabel-sm'>$label</span></br> 
 				</button> </div>
@@ -235,6 +250,26 @@
 					";
 		}
 
+		function otherButton($ID) {
+			$value = $_GET[$ID];
+			$active = "";
+			$bg 	= '#eee';
+			if ($value !== "") {
+				$active = 'active';
+				$bg = '#339933';
+				$content = "value=$value";
+			} else {
+				$content = 'placeholder="Please specify"';
+			} 
+			return "
+				<div class='col-xs-6 top-buffer'>
+				<button class='meterbutton $active' style=\"background: $bg; \" >
+					<span class='btnLabel-sm'>Other</span></br> 
+					</button>
+					<input class='form-control other' id='$ID' name='$ID' type='text' $content> </br>
+				   	</div>
+				";
+		}
 		function navButton($type){
 			return "<div class='col-xs-6 top-buffer'> 
 				<button class='meterbutton next' onClick='$type()'>
@@ -337,11 +372,10 @@
     <div class="carousel-inner">
 		<!-- pass php variables to GET form elements -->
 		<!-- stored previous page when advancing or moving back pages -->
-		<input type="hidden" id="id" name="id" value="<?php echo $idHousehold; ?>">
-		<input type="hidden" id="sc" name="sc" value="<?php echo $security_code; ?>">
 		<input type="hidden" id="pp" name="pp" value="<?php echo $_GET['pp']; ?>">
 		<input type="hidden" id="pn" name="pn" value="<?php echo $page_number; ?>">
 		<input type="hidden" id="people" name="people" value="<?php echo $people; ?>">
+		<input type="hidden" id="ht" name="ht" value="<?php echo $house_type; ?>">
 		<input type="hidden" id="inc" name="inc" value="<?php echo $income; ?>">
 		<input type="hidden" id="ag1" name="ag1" value="<?php echo $age_group1; ?>">
 		<input type="hidden" id="ag2" name="ag2" value="<?php echo $age_group2; ?>">
@@ -350,6 +384,10 @@
 		<input type="hidden" id="ag5" name="ag5" value="<?php echo $age_group5; ?>">
 		<input type="hidden" id="ag6" name="ag6" value="<?php echo $age_group6; ?>">
 		<input type="hidden" id="rms" name="rms" value="<?php echo $rooms; ?>">
+		<input type="hidden" id="pt1" name="pt1" value="<?php echo $pet1; ?>">
+		<input type="hidden" id="pt2" name="pt2" value="<?php echo $pet2; ?>">
+		<input type="hidden" id="pt3" name="pt3" value="<?php echo $pet3; ?>">
+
 		<input type="hidden" id="ab1" name="ab1" value="<?php echo $appliance_b1; ?>">
 		<input type="hidden" id="ab2" name="ab2" value="<?php echo $appliance_b2; ?>">
 		<input type="hidden" id="ab3" name="ab3" value="<?php echo $appliance_b3; ?>">
@@ -371,13 +409,16 @@
 		<input type="hidden" id="own" name="own" value="<?php echo $own; ?>">
 		<input type="hidden" id="monthly" name="monthly">
 
-	<div class="item <?php if ($_GET['pp'] == 0) {echo "active";}?>"> <!-- number of people -->
+	<div class="item <?php if ($_GET['pp'] == 0) {echo "active";}?>"> <!-- no ID/sc -->
 		<?php
-			if ($security_code == $_GET[sc]) {
+			if ($security_code == $user_code) {
 		echo "<h2> Dear ". $name." ". $surname."</h2>";
 		echo "<p>Thank you for taking part in this research with the University of Oxford.</p>
 		<p> Before we can send you your kit, please answer a few simple questions. This should take no more than 3 minutes.</p>
-		<p>First, can you confirm that these are the correct contact details for you?</p>";
+		<p>First, can you confirm that these are the correct contact details for you?</p>
+		<input type='hidden' id='id' name='id' value='$idHousehold'>
+		<input type='hidden' id='sc' name='sc' value='$user_code'>
+		";
 
 		echo "<h3>Email: "  . $email .  "</h3>";
 		echo $_GET['id'];
@@ -386,14 +427,23 @@
 		echo navButton('yes');
 			} else {
 				echo "<h2>Thank you for your interest in this research project.</h2>
-					<p>To take part, please <a href='./register.php'>register here</a>.</p>
-					<p>If you think that you already registered, please email philipp.grunewald@ouce.ox.ac.uk</p>
-					<p>Thank you.</p>";
+					<p>If you have already registered, you should have received an email with your personal ID number and a security code. You can enter those below, or simply click on the link in that email instead.</p>
+					<p>If you did not receive such an email, please contact philipp.grunewald@ouce.ox.ac.uk, or
+					<a href='./register.php'>register here</a>.</p>
+					</br>
+					<label for='id'>Your ID number</label> 
+					<input class='form-control' style='width: 80%' id='id' name='id' type='text'> </br>
+					<label for='sc'>Your security code</label>
+					<input class='form-control' style='width: 80%' id='sc' name='sc' type='text'> </br>
+		<div class='col-xs-6 top-buffer'>
+		</div> 
+					";
+					echo navButton('next');
 			}
 		?>
 		</div> <!--  item -->
 
-	<div class="item <?php if ($_GET['pp'] == 1) {echo "active";}?>"> <!-- number of people -->
+	<div class="item <?php if ($_GET['pp'] == 1) {echo "active";}?>"> <!-- Address -->
 		<h2>What is your address?<small></br>This is where we will send your pack.</small></h2> </br>
 		<div class="form-group">
 			<label for="address1">Address</label>
@@ -439,7 +489,28 @@
 			<?php echo radioButton('5','p6pm','5','or more'); ?>
 		</div> <!--  item -->
 
-	<div class="item <?php if ($_GET['pp'] == 5) {echo "active";}?>"> <!-- Rooms -->
+	<div class="item <?php if ($_GET['pp'] == 5) {echo "active";}?>"> <!-- Pets -->
+		<h2>Do you have any pets?</h2>
+			<small>Click any pets you have in the house.</small> </br>
+				<?php echo toggleButton("Dog", "pt1", "dog.png"); ?>
+				<?php echo toggleButton("Cat", "pt2", "cat.png"); ?>
+				<?php echo toggleButton("Fish", "pt3", "fish_tank.png"); ?>
+				<?php echo otherButton("pt4"); ?>
+				<?php echo navButton('back'); ?>
+				<?php echo navButton('next'); ?>
+			</div> <!--  class item-->
+
+	<div class="item <?php if ($_GET['pp'] == 6) {echo "active";}?>"> <!-- house type -->
+		<h2>What type of house do you live in?</h2>
+			<?php echo radioButton('1','ht','Flat','apartment'); ?>
+			<?php echo radioButton('2','ht','Detached','house'); ?>
+			<?php echo radioButton('3','ht','Semi-detached','house'); ?>
+			<?php echo radioButton('4','ht','Terraced','house'); ?>
+			<?php echo radioButton('5','ht','Bungalow','house'); ?>
+			<?php echo radioButton('6','ht','Other',''); ?>
+		</div> <!--  item -->
+
+	<div class="item <?php if ($_GET['pp'] == 7) {echo "active";}?>"> <!-- Rooms -->
 		<h2>How many rooms are in your home?<small></br>Not counting kitchens and bathroom(s)</small> </h2>
 			<?php echo radioButton('1','rms','1','room'); ?>
 			<?php echo radioButton('2','rms','2','rooms'); ?>
@@ -449,7 +520,7 @@
 			<?php echo radioButton('6','rms','6','or more'); ?>
      	 	</div>
 
-	<div class="item <?php if ($_GET['pp'] == 6) {echo "active";}?>"> <!-- ownership -->
+	<div class="item <?php if ($_GET['pp'] == 8) {echo "active";}?>"> <!-- ownership -->
 		<h2>Do you own or rent your property?</h2>
 			<div class="row"> <div class="col-xs-3 top-buffer">  </div>
 			<?php echo radioButton('1','own','Own','With or without a mortgage'); ?>
@@ -460,8 +531,7 @@
 			</div>
 		</div> <!--  item -->
 
-
-	<div class="item <?php if ($_GET['pp'] == 7) {echo "active";}?>"> <!-- Appliance toggle -->
+	<div class="item <?php if ($_GET['pp'] == 8) {echo "active";}?>"> <!-- Appliance toggle -->
 		<h2>Which of these items do you have?</h2>
 			<small>Click any that items you have in the house.</small> </br>
 				<?php echo toggleButton("Tumble dryer", "ab1", "dryer.png"); ?>
@@ -469,14 +539,14 @@
 				<?php echo toggleButton("Under floor heating", "ab3", "ufh.png"); ?>
 				<?php echo toggleButton("Gas boiler", "ab4", "boiler.png"); ?>
 				<?php echo toggleButton("Heat pump", "ab5", "heat_pump.png"); ?>
-				<?php echo toggleButton("Electric hob", "ba6", "hob.png"); ?>
+				<?php echo toggleButton("Electric hob", "ab6", "hob.png"); ?>
 				<?php echo toggleButton("Fish tank", "ab7", "fish_tank.png"); ?>
 				<?php echo toggleButton("Hedge trimmer", "ab7", "fish_tank.png"); ?>
 				<?php echo navButton('back'); ?>
 				<?php echo navButton('next'); ?>
 			</div> <!--  class item-->
 
-	<div class="item <?php if ($_GET['pp'] == 8) {echo "active";}?>"> <!-- Appliance count -->
+	<div class="item <?php if ($_GET['pp'] == 9) {echo "active";}?>"> <!-- Appliance count -->
 		<h2>Do you have any of these items?
 			<small>If so, click to say how many. Only count things you actually used in the last year.</small></h2>
 			<div class="row">
@@ -560,7 +630,7 @@
 			</div> <!--  row  -->
 		</div> <!--  item -->
 
-	<div class="item <?php if ($_GET['pp'] == 9) {echo "active";}?>"> <!-- El. provider -->
+	<div class="item <?php if ($_GET['pp'] == 10) {echo "active";}?>"> <!-- El. provider -->
 		<h2>Who provides your electricity?</h2>
 			<?php echo radioButton('bg' ,'pvd','British Gas','bg.png'); ?>
 			<?php echo radioButton('eco','pvd','Ecotricity','eco.png'); ?>
@@ -574,7 +644,7 @@
 			<?php echo radioButton('oth','pvd','Other','not listed'); ?>
 		</div> <!--  item -->
 
-	<div class="item <?php if ($_GET['pp'] == 10) {echo "active";}?>"> <!-- Tariff -->
+	<div class="item <?php if ($_GET['pp'] == 11) {echo "active";}?>"> <!-- Tariff -->
 		<h2>Which of these best describes your electricity tariff?<small></br>Just pick one</small> </h2>
 			<?php echo radioButton('1','trf','Standard','flat rate'); ?>
 			<?php echo radioButton('2','trf','Green','low carbon'); ?>
@@ -584,7 +654,7 @@
 			<?php echo radioButton('6','trf','Other','not listed here'); ?>
 		 	</div>
 
-	<div class="item <?php if ($_GET['pp'] == 11) {echo "active";}?>"> <!-- Bill -->
+	<div class="item <?php if ($_GET['pp'] == 12) {echo "active";}?>"> <!-- Bill -->
 		<h2>How much do you spend on electricity per year?<small></br>If you prefer to answer per month, click below.</small> </h2>
 			<?php $bill = '£300'; if($_GET['monthly'] > 0) {$bill = '£25';} echo radioButton('1','bl',$bill,'or less'); ?>
 			<?php $bill = '£400'; if($_GET['monthly'] > 0) {$bill = '£33';} echo radioButton('1','bl',$bill,'up to'); ?>
@@ -595,7 +665,7 @@
 			<?php $bill = 'monthly'; if($_GET['monthly'] > 0) {$bill = 'annually';} echo toggleButton("Say $bill","monthly","switch to $bill"); ?>
 		 	</div>
 
-	<div class="item <?php if ($_GET['pp'] == 12) {echo "active";}?>"> <!-- Income -->
+	<div class="item <?php if ($_GET['pp'] == 13) {echo "active";}?>"> <!-- Income -->
 		<h2>What is your annual household income?</h2>
 			<small>Before any deductions for tax of national insurance</small> </br>
 				<?php echo radioButton("1","inc", "15,000", "up to"); ?>
@@ -609,7 +679,7 @@
 			</div> <!--  class item  -->
 
 
-	<div class="item <?php if ($_GET['pp'] == 13) {echo "active";}?>"> <!-- Bill -->
+	<div class="item <?php if ($_GET['pp'] == 14) {echo "active";}?>"> <!-- Bill -->
 		<h2>How affordable do you find your electricity?<small></br>Select the statement which best describes the affordability of your electricity.</small> </h2>
 			<?php echo radioButton('1','af','Not affordable','I struggle to pay'); ?>
 			<?php echo radioButton('2','af','High ','I must budget'); ?>
@@ -617,7 +687,7 @@
 			<?php echo radioButton('4','af','Very affordable','I can pay easily'); ?>
 		 	</div>
 
-	<div class="item <?php if ($_GET['pp'] == 14) {echo "active";}?>"> <!-- Bill -->
+	<div class="item <?php if ($_GET['pp'] == 15) {echo "active";}?>"> <!-- Trial day -->
 		<h2>Which days would suit you for this trial?<small></br>Pick any days that allow you to install the electricity recorder the day before. Don't worry whether this is a 'typical' day for you.</small> </h2>
 			<?php $date1 = '29 Jan'; ?>
 			<?php $date2 = '1 Feb'; ?>
@@ -627,6 +697,9 @@
 			<?php echo toggleButton($date3,"date3","Friday");?>
 		 	</div>
 
+	<div class="item <?php if ($_GET['pp'] == 15) {echo "active";}?>"> <!-- Trial day -->
+	<h2>Thank you! You have completed this questionnaire.<small></br>You will shortly receive your parcel with your electricity recorder and <?php echo $age_group2+$age_group3;?> </small> </h2>
+		 	</div>
     </div><!-- carousel-inner -->
 </form>
 
